@@ -97,6 +97,18 @@ const initialUsers: User[] = [
     username: 'medson',
     password: 'admin123',
     isAdmin: true,
+  },
+  {
+    id: '2',
+    username: 'admin',
+    password: 'admin123',
+    isAdmin: true,
+  },
+  {
+    id: '3',
+    username: 'ana',
+    password: 'admin123',
+    isAdmin: true,
   }
 ];
 

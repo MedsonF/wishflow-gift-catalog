@@ -84,10 +84,6 @@ const LoginPage = () => {
                 {isLoading ? 'Entrando...' : 'Entrar'}
               </Button>
             </form>
-            
-            <div className="mt-4 text-center text-sm text-gray-500">
-              <p>Use "admin" e "admin123" para teste</p>
-            </div>
           </CardContent>
         </Card>
       </div>
