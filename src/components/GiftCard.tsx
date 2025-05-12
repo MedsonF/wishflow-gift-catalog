@@ -46,15 +46,16 @@ const GiftCard: React.FC<GiftCardProps> = ({
       gift.status === 'chosen' && !admin && 'chosen-item opacity-75'
     )}>
       <div className="relative h-48 overflow-hidden">
-        <img
-          src={gift.imageUrl}
-          alt={gift.title}
-          className="w-full aspect-square object-cover"
-        />
-        <Badge className="absolute top-2 right-2 bg-primary">
-          {formatPrice(gift.price)}
-        </Badge>
-      </div>
+        <div className="relative w-full aspect-square overflow-hidden">
+          <img
+            src={gift.imageUrl}
+            alt={gift.title}
+            className="w-full h-full object-contain bg-white"
+          />
+          <Badge className="absolute top-2 right-2 bg-primary">
+            {formatPrice(gift.price)}
+          </Badge>
+        </div>
       <CardContent className="pt-4 flex-grow">
         <h3 className="font-bold text-lg mb-2 line-clamp-1">{gift.title}</h3>
         <p className="text-gray-600 text-sm line-clamp-3">{gift.description}</p>
