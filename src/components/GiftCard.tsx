@@ -49,7 +49,7 @@ const GiftCard: React.FC<GiftCardProps> = ({
         <img
           src={gift.imageUrl}
           alt={gift.title}
-          className="w-full h-full object-cover"
+          className="w-full aspect-square object-cover"
         />
         <Badge className="absolute top-2 right-2 bg-primary">
           {formatPrice(gift.price)}
