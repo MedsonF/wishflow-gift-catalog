@@ -94,7 +94,7 @@ const initialSiteSettings: SiteSettings = {
 const initialUsers: User[] = [
   {
     id: '1',
-    username: 'admin',
+    username: 'medson',
     password: 'admin123',
     isAdmin: true,
   }
