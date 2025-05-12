@@ -21,9 +21,9 @@ const AdminSidebar: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white border-r border-gray-200 h-full flex flex-col">
+    <div className="bg-sidebar h-full flex flex-col">
       <div className="p-6 border-b">
-        <h2 className="text-xl font-bold text-primary">Painel Admin</h2>
+        <h2 className="text-xl font-bold text-sidebar-foreground">Painel Admin</h2>
       </div>
       
       <nav className="flex-1 p-4">
@@ -35,8 +35,10 @@ const AdminSidebar: React.FC = () => {
                 end={link.exact}
                 className={({ isActive }) =>
                   cn(
-                    "block px-4 py-2 rounded-md transition-colors hover:bg-primary hover:bg-opacity-10 hover:text-primary",
-                    isActive ? "bg-primary bg-opacity-10 text-primary font-medium" : "text-gray-600"
+                    "block px-4 py-2 rounded-md transition-colors",
+                    isActive 
+                      ? "bg-primary text-primary-foreground font-medium" 
+                      : "text-sidebar-foreground hover:bg-primary hover:text-primary-foreground hover:bg-opacity-10"
                   )
                 }
               >
@@ -50,16 +52,16 @@ const AdminSidebar: React.FC = () => {
       <div className="p-4 border-t">
         <div className="space-y-3">
           <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600">Total de Itens</span>
-            <span className="font-medium">{totalGifts}</span>
+            <span className="text-sidebar-foreground">Total de Itens</span>
+            <span className="font-medium text-sidebar-foreground">{totalGifts}</span>
           </div>
           <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600">Escolhidos</span>
-            <span className="font-medium">{chosenGifts}</span>
+            <span className="text-sidebar-foreground">Escolhidos</span>
+            <span className="font-medium text-sidebar-foreground">{chosenGifts}</span>
           </div>
           <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600">Disponíveis</span>
-            <span className="font-medium">{availableGifts}</span>
+            <span className="text-sidebar-foreground">Disponíveis</span>
+            <span className="font-medium text-sidebar-foreground">{availableGifts}</span>
           </div>
         </div>
       </div>
