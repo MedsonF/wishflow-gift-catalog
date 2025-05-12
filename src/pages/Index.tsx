@@ -87,7 +87,7 @@ const Index = () => {
         )}
         
         {/* CTA section */}
-        <section className="py-16 bg-primary bg-opacity-5">
+        <section className="py-16 bg-primary-foreground bg-opacity-5">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-bold mb-4">Escolha um Presente Especial</h2>
             <p className="text-lg max-w-2xl mx-auto mb-8 text-gray-600">
