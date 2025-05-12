@@ -139,8 +139,31 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
             name="imageUrl"
             value={formData.imageUrl}
             onChange={handleChange}
-            required
+            placeholder="Cole a URL da imagem ou selecione um arquivo abaixo"
           />
+          <Input
+            id="imageFile"
+            name="imageFile"
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const imageUrl = URL.createObjectURL(file);
+                setFormData((prev) => ({
+                  ...prev,
+                  imageUrl,
+                }));
+              }
+            }}
+          />
+          {formData.imageUrl && (
+            <img
+              src={formData.imageUrl}
+              alt="Prévia da imagem"
+              className="mt-2 max-h-32 rounded"
+            />
+          )}
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
