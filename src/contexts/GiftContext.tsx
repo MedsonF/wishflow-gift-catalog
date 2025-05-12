@@ -86,7 +86,7 @@ const initialGalleryImages: GalleryImage[] = [
 const initialSiteSettings: SiteSettings = {
   title: 'Lista de Presentes',
   description: 'Selecione um presente especial para celebrar conosco este momento importante.',
-  primaryColor: '#f48fb1',
+  primaryColor: '#fafaf5',
   backgroundColor: '#ffffff',
 };
 
