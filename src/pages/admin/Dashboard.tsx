@@ -97,7 +97,7 @@ const Dashboard = () => {
           
           <GiftGrid 
             gifts={recentGifts} 
-            admin={true} 
+            admin={false} 
           />
         </div>
       )}
