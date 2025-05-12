@@ -23,10 +23,10 @@ const Index = () => {
         {/* Hero section */}
         <section className="bg-primary bg-opacity-10 py-16">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#fafaf5]">
               {siteSettings.title}
             </h1>
-            <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-gray-700">
+            <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-[#fafaf5]">
               {siteSettings.description}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
