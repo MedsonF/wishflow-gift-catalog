@@ -6,3 +6,8 @@ services:
     ports:
       - "8080:8511"
     restart: unless-stopped
+  
+  backend:
+    build: .
+    volumes:
+      - ./img:/app/img

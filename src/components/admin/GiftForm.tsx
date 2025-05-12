@@ -146,13 +146,21 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
             name="imageFile"
             type="file"
             accept="image/*"
-            onChange={(e) => {
+            onChange={async (e) => {
               const file = e.target.files?.[0];
               if (file) {
-                const imageUrl = URL.createObjectURL(file);
+                const formData = new FormData();
+                formData.append('image', file);
+
+                const response = await fetch('http://localhost:4000/upload', {
+                  method: 'POST',
+                  body: formData,
+                });
+
+                const data = await response.json();
                 setFormData((prev) => ({
                   ...prev,
-                  imageUrl,
+                  imageUrl: data.path, // Salva o caminho retornado pelo backend
                 }));
               }
             }}
