@@ -14,8 +14,8 @@ const ManageItems = () => {
   const { gifts, categories, deleteGift, markAsChosen } = useGiftContext();
   const { toast } = useToast();
   const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentGift, setCurrentGift] = useState<string | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -25,8 +25,8 @@ const ManageItems = () => {
   const filteredGifts = gifts.filter(gift => {
     const matchesSearch = gift.title.toLowerCase().includes(search.toLowerCase()) ||
                           gift.description.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = categoryFilter ? gift.category === categoryFilter : true;
-    const matchesStatus = statusFilter ? gift.status === statusFilter : true;
+    const matchesCategory = categoryFilter === 'all' ? true : gift.category === categoryFilter;
+    const matchesStatus = statusFilter === 'all' ? true : gift.status === statusFilter;
     
     return matchesSearch && matchesCategory && matchesStatus;
   });
@@ -91,7 +91,7 @@ const ManageItems = () => {
             <SelectValue placeholder="Filtrar por categoria" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todas as categorias</SelectItem>
+            <SelectItem value="all">Todas as categorias</SelectItem>
             {categories.map(category => (
               <SelectItem key={category.id} value={category.id}>
                 {category.name}
@@ -105,7 +105,7 @@ const ManageItems = () => {
             <SelectValue placeholder="Filtrar por status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todos os status</SelectItem>
+            <SelectItem value="all">Todos os status</SelectItem>
             <SelectItem value="available">Disponível</SelectItem>
             <SelectItem value="chosen">Escolhido</SelectItem>
           </SelectContent>

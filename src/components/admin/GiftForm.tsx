@@ -23,7 +23,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
     price: 0,
     imageUrl: '',
     category: '',
-    status: 'available',
+    status: 'available' as 'available' | 'chosen', // Type assertion to ensure type safety
     cashPaymentLink: '',
     installmentPaymentLink: '',
   });
