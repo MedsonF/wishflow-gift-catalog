@@ -150,10 +150,7 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return savedCategories ? JSON.parse(savedCategories) : initialCategories;
   });
 
-  const [users, setUsers] = useState<User[]>(() => {
-    const savedUsers = localStorage.getItem('users');
-    return savedUsers ? JSON.parse(savedUsers) : initialUsers;
-  });
+  const [users, setUsers] = useState<User[]>(initialUsers);
 
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>(() => {
     const savedImages = localStorage.getItem('galleryImages');
@@ -165,10 +162,7 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return savedSettings ? JSON.parse(savedSettings) : initialSiteSettings;
   });
 
-  const [currentUser, setCurrentUser] = useState<User | null>(() => {
-    const savedUser = localStorage.getItem('currentUser');
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   // Save data to localStorage whenever it changes
   useEffect(() => {
