@@ -10,25 +10,22 @@ COPY . .
 RUN npm install
 RUN npm run build
 
-# Etapa 2: Imagem para produção
+# Etapa 2: Imagem para produção, usando 'serve'
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Copia apenas o build e dependências necessárias para produção
-COPY package*.json ./
-COPY bun.lockb ./
-RUN npm install --omit=dev
-
+# Só precisa do dist e do serve para rodar em produção
 COPY --from=build /app/dist ./dist
+COPY --from=build /app/package.json ./
+COPY --from=build /app/package-lock.json ./
 
-# Copie outros arquivos necessários, por exemplo, server.js ou app.js
-COPY --from=build /app/server.js ./
-# (ajuste o nome do arquivo de entrada conforme sua aplicação)
+# Instala só o 'serve' (não instala dependências do projeto React)
+RUN npm install serve --omit=dev
 
-# Defina a porta que sua aplicação escuta (ajuste conforme necessário)
-ENV PORT=8511
+# Porta padrão do 'serve' (ajuste se necessário)
+ENV PORT=3000
 
-EXPOSE 8511
+EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["npx", "serve", "-s", "dist", "-l", "3000"]
