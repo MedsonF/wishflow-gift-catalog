@@ -10,18 +10,25 @@ COPY . .
 RUN npm install
 RUN npm run build
 
-# Etapa 2: Servir arquivos estáticos com nginx
-FROM nginx:alpine
+# Etapa 2: Imagem para produção
+FROM node:20-alpine
 
-# Remove o arquivo default do nginx
-RUN rm -rf /usr/share/nginx/html/*
+WORKDIR /app
 
-# Copia o build do Vite para o nginx
-COPY --from=build /app/dist /usr/share/nginx/html
+# Copia apenas o build e dependências necessárias para produção
+COPY package*.json ./
+COPY bun.lockb ./
+RUN npm install --omit=dev
 
-# Copia um arquivo de configuração customizado do nginx, se necessário
-# COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /app/dist ./dist
+
+# Copie outros arquivos necessários, por exemplo, server.js ou app.js
+COPY --from=build /app/server.js ./
+# (ajuste o nome do arquivo de entrada conforme sua aplicação)
+
+# Defina a porta que sua aplicação escuta (ajuste conforme necessário)
+ENV PORT=8511
 
 EXPOSE 8511
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "server.js"]
