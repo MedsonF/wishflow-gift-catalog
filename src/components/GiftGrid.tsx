@@ -2,6 +2,7 @@
 import React from 'react';
 import GiftCard from '@/components/GiftCard';
 import { GiftItem } from '@/types';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface GiftGridProps {
   gifts: GiftItem[];
@@ -18,8 +19,11 @@ const GiftGrid: React.FC<GiftGridProps> = ({
   onDelete,
   onMarkChosen
 }) => {
+  // Using the mobile hook to determine if we're on a mobile device
+  const isMobile = useIsMobile();
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className={`grid grid-cols-2 ${!isMobile ? 'sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4' : ''} gap-4 sm:gap-6`}>
       {gifts.map((gift) => (
         <GiftCard
           key={gift.id}
