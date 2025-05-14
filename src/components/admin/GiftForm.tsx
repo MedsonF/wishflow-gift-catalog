@@ -90,6 +90,25 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
     onSubmit();
   };
 
+  const handleImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // Ensure we're working with a string for the image data
+        const base64String = reader.result as string;
+        // Save to localStorage
+        localStorage.setItem('savedImage', base64String);
+        // Update form data with the string representation
+        setFormData(prev => ({
+          ...prev,
+          imageUrl: base64String
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
@@ -146,22 +165,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
             name="imageFile"
             type="file"
             accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  const base64String = reader.result;
-                  // Salvar no localStorage
-                  localStorage.setItem('savedImage', base64String);
-                  setFormData(prev => ({
-                    ...prev,
-                    imageUrl: base64String
-                  }));
-                };
-                reader.readAsDataURL(file);
-              }
-            }}
+            onChange={handleImageFile}
           />
           {formData.imageUrl && (
             <img

@@ -9,7 +9,146 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      admin_users: {
+        Row: {
+          created_at: string
+          id: string
+          is_admin: boolean
+          password: string
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_admin?: boolean
+          password: string
+          username: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_admin?: boolean
+          password?: string
+          username?: string
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      gallery_images: {
+        Row: {
+          created_at: string
+          id: string
+          title: string | null
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          title?: string | null
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          title?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
+      gifts: {
+        Row: {
+          cash_payment_link: string | null
+          category_id: string | null
+          created_at: string
+          description: string
+          id: string
+          image_url: string
+          installment_payment_link: string | null
+          price: number
+          status: string
+          title: string
+        }
+        Insert: {
+          cash_payment_link?: string | null
+          category_id?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          image_url: string
+          installment_payment_link?: string | null
+          price: number
+          status: string
+          title: string
+        }
+        Update: {
+          cash_payment_link?: string | null
+          category_id?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string
+          installment_payment_link?: string | null
+          price?: number
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gifts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_settings: {
+        Row: {
+          background_color: string
+          created_at: string
+          description: string
+          id: string
+          primary_color: string
+          title: string
+        }
+        Insert: {
+          background_color: string
+          created_at?: string
+          description: string
+          id?: string
+          primary_color: string
+          title: string
+        }
+        Update: {
+          background_color?: string
+          created_at?: string
+          description?: string
+          id?: string
+          primary_color?: string
+          title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
