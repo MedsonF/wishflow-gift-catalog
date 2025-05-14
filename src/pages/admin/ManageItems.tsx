@@ -22,11 +22,28 @@ const ManageItems = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [giftToDelete, setGiftToDelete] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Refresh data when component mounts
   useEffect(() => {
-    refreshData();
-  }, [refreshData]);
+    const loadData = async () => {
+      setIsRefreshing(true);
+      try {
+        await refreshData();
+      } catch (error) {
+        console.error('Error refreshing data:', error);
+        toast({
+          title: 'Erro ao carregar dados',
+          description: 'Ocorreu um erro ao carregar os dados. Tente novamente.',
+          variant: 'destructive',
+        });
+      } finally {
+        setIsRefreshing(false);
+      }
+    };
+    
+    loadData();
+  }, [refreshData, toast]);
 
   // Filter gifts
   const filteredGifts = gifts.filter(gift => {
@@ -97,22 +114,32 @@ const ManageItems = () => {
     }
   };
 
-  const handleFormSubmit = () => {
-    setIsFormOpen(false);
-    setCurrentGift(null);
-    
-    toast({
-      title: currentGift ? 'Item atualizado' : 'Item adicionado',
-      description: 'A operação foi concluída com sucesso.',
-    });
-    
-    // Refresh data
-    refreshData();
+  const handleFormSubmit = async () => {
+    try {
+      // Refresh data and wait for it to complete
+      await refreshData();
+      
+      setIsFormOpen(false);
+      setCurrentGift(null);
+      
+      toast({
+        title: currentGift ? 'Item atualizado' : 'Item adicionado',
+        description: 'A operação foi concluída com sucesso.',
+      });
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+      toast({
+        title: 'Erro ao atualizar dados',
+        description: 'Ocorreu um erro ao atualizar os dados.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const currentGiftData = currentGift ? gifts.find(g => g.id === currentGift) : undefined;
 
-  if (loading.gifts || loading.categories) {
+  // Handle loading state - show loading spinner when first loading data
+  if ((loading.gifts || loading.categories) && !isRefreshing) {
     return (
       <div className="h-96 flex items-center justify-center">
         <div className="flex flex-col items-center gap-2">
@@ -167,8 +194,15 @@ const ManageItems = () => {
         </Select>
       </div>
       
+      {/* Loading overlay when refreshing data */}
+      {isRefreshing && (
+        <div className="flex justify-center py-4">
+          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        </div>
+      )}
+      
       {/* Results */}
-      {filteredGifts.length === 0 ? (
+      {filteredGifts.length === 0 && !isRefreshing ? (
         <div className="text-center py-8">
           <h3 className="text-lg font-semibold mb-2">Nenhum item encontrado</h3>
           <p className="text-gray-600">

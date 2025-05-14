@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { GiftProvider } from "@/contexts/GiftContext";
 import { useState, useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -35,11 +36,27 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate initial data loading
-    setTimeout(() => {
+    // Initialize app and load initial data
+    const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);
+    
+    return () => clearTimeout(timer);
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center space-y-4">
+          <div className="flex justify-center">
+            <Skeleton className="h-12 w-12 rounded-full" />
+          </div>
+          <Skeleton className="h-4 w-48 mx-auto" />
+          <Skeleton className="h-4 w-32 mx-auto" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>

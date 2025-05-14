@@ -193,13 +193,16 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Function to refresh all data
   const refreshData = async () => {
-    await Promise.all([
+    const refreshPromises = [
       fetchGifts(),
       fetchCategories(),
       fetchGalleryImages(),
       fetchSiteSettings(),
       fetchUsers()
-    ]);
+    ];
+    
+    await Promise.all(refreshPromises);
+    return;
   };
 
   // Initial data load
@@ -280,8 +283,10 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       
       setGifts(prev => [...prev, newGift]);
+      return;
     } catch (error) {
       console.error('Error adding gift:', error);
+      throw error;
     }
   };
 
@@ -312,8 +317,10 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
           gift.id === id ? { ...gift, ...updatedFields } : gift
         )
       );
+      return;
     } catch (error) {
       console.error('Error updating gift:', error);
+      throw error;
     }
   };
 
@@ -328,8 +335,10 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // Update local state
       setGifts(prev => prev.filter(gift => gift.id !== id));
+      return;
     } catch (error) {
       console.error('Error deleting gift:', error);
+      throw error;
     }
   };
 
@@ -342,8 +351,10 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const newStatus = gift.status === 'available' ? 'chosen' : 'available';
       
       await updateGift(id, { status: newStatus });
+      return;
     } catch (error) {
       console.error('Error marking gift as chosen:', error);
+      throw error;
     }
   };
 
@@ -368,8 +379,10 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       
       setCategories(prev => [...prev, newCategory]);
+      return;
     } catch (error) {
       console.error('Error adding category:', error);
+      throw error;
     }
   };
 
@@ -387,8 +400,10 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
           category.id === id ? { ...category, ...updatedFields } : category
         )
       );
+      return;
     } catch (error) {
       console.error('Error updating category:', error);
+      throw error;
     }
   };
 
@@ -402,8 +417,10 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) throw error;
 
       setCategories(prev => prev.filter(category => category.id !== id));
+      return;
     } catch (error) {
       console.error('Error deleting category:', error);
+      throw error;
     }
   };
 
@@ -428,8 +445,10 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       
       setGalleryImages(prev => [...prev, newImage]);
+      return;
     } catch (error) {
       console.error('Error adding gallery image:', error);
+      throw error;
     }
   };
 
@@ -443,8 +462,10 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) throw error;
 
       setGalleryImages(prev => prev.filter(image => image.id !== id));
+      return;
     } catch (error) {
       console.error('Error deleting gallery image:', error);
+      throw error;
     }
   };
 
@@ -486,8 +507,10 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       setSiteSettings(prev => ({ ...prev, ...settings }));
+      return;
     } catch (error) {
       console.error('Error updating site settings:', error);
+      throw error;
     }
   };
 
