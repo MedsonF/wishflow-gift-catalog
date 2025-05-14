@@ -23,11 +23,15 @@ import ManageCategories from "./pages/admin/ManageCategories";
 import ManageGallery from "./pages/admin/ManageGallery";
 import SiteSettings from "./pages/admin/SiteSettings";
 
+// Configure QueryClient with proper error handling
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      retry: 1
+      retry: 1,
+      onError: (error) => {
+        console.error("Query error:", error);
+      }
     },
   },
 });
@@ -62,8 +66,6 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <GiftProvider>
-          <Toaster />
-          <Sonner />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -84,6 +86,8 @@ const App = () => {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
+          <Toaster />
+          <Sonner />
         </GiftProvider>
       </TooltipProvider>
     </QueryClientProvider>

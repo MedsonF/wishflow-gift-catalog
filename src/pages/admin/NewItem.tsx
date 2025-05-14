@@ -5,12 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { useGiftContext } from '@/contexts/GiftContext';
+import { Loader2 } from 'lucide-react';
 
 const NewItem = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { refreshData } = useGiftContext();
+  const { refreshData, loading } = useGiftContext();
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -33,10 +34,20 @@ const NewItem = () => {
         description: 'Ocorreu um erro ao atualizar os dados.',
         variant: 'destructive',
       });
-    } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (loading.gifts || loading.categories) {
+    return (
+      <div className="h-96 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-2">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p>Carregando dados...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

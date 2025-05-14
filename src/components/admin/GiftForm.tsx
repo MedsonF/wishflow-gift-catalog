@@ -103,16 +103,14 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        // Fix for TS error: Ensure we're working with a string
+        // Fix: Ensure we're working with a string
         const result = reader.result;
         if (typeof result === 'string') {
-          // Save to localStorage for backwards compatibility
-          localStorage.setItem('savedImage', result);
           // Update form data with the string representation
-          setFormData(prev => ({
-            ...prev,
+          setFormData({
+            ...formData,
             imageUrl: result
-          }));
+          });
         }
       };
       reader.readAsDataURL(file);
@@ -131,6 +129,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
               value={formData.title}
               onChange={handleChange}
               required
+              disabled={isSubmitting}
             />
           </div>
           
@@ -145,6 +144,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
               value={formData.price}
               onChange={handleChange}
               required
+              disabled={isSubmitting}
             />
           </div>
         </div>
@@ -158,6 +158,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
             onChange={handleChange}
             required
             rows={3}
+            disabled={isSubmitting}
           />
         </div>
         
@@ -169,6 +170,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
             value={formData.imageUrl}
             onChange={handleChange}
             placeholder="Cole a URL da imagem ou selecione um arquivo abaixo"
+            disabled={isSubmitting}
           />
           <Input
             id="imageFile"
@@ -176,6 +178,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
             type="file"
             accept="image/*"
             onChange={handleImageFile}
+            disabled={isSubmitting}
           />
           {formData.imageUrl && (
             <img
@@ -192,6 +195,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
             <Select 
               value={formData.category} 
               onValueChange={handleCategoryChange}
+              disabled={isSubmitting}
               required
             >
               <SelectTrigger>
@@ -212,6 +216,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
             <Select 
               value={formData.status} 
               onValueChange={handleStatusChange}
+              disabled={isSubmitting}
               required
             >
               <SelectTrigger>
@@ -232,6 +237,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
             name="cashPaymentLink"
             value={formData.cashPaymentLink}
             onChange={handleChange}
+            disabled={isSubmitting}
             required
           />
         </div>
@@ -241,6 +247,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
             id="hasInstallment"
             checked={hasInstallment}
             onCheckedChange={handleInstallmentToggle}
+            disabled={isSubmitting}
           />
           <Label htmlFor="hasInstallment">Adicionar Pagamento Parcelado</Label>
         </div>
@@ -253,6 +260,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
               name="installmentPaymentLink"
               value={formData.installmentPaymentLink}
               onChange={handleChange}
+              disabled={isSubmitting}
               required={hasInstallment}
             />
           </div>

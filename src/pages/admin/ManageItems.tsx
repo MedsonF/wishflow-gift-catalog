@@ -27,6 +27,8 @@ const ManageItems = () => {
   // Refresh data when component mounts
   useEffect(() => {
     const loadData = async () => {
+      if (loading.gifts || loading.categories) return; // Avoid multiple refreshes
+      
       setIsRefreshing(true);
       try {
         await refreshData();
@@ -43,7 +45,7 @@ const ManageItems = () => {
     };
     
     loadData();
-  }, [refreshData, toast]);
+  }, []); // Only run once on mount
 
   // Filter gifts
   const filteredGifts = gifts.filter(gift => {
@@ -138,7 +140,7 @@ const ManageItems = () => {
 
   const currentGiftData = currentGift ? gifts.find(g => g.id === currentGift) : undefined;
 
-  // Handle loading state - show loading spinner when first loading data
+  // Handle initial loading state - show loading spinner when first loading data
   if ((loading.gifts || loading.categories) && !isRefreshing) {
     return (
       <div className="h-96 flex items-center justify-center">
