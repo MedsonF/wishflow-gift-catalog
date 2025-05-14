@@ -19,18 +19,15 @@ const Header: React.FC = () => {
           <Link to="/" className="hover:text-primary transition-colors">
             Início
           </Link>
-          {Array.from(new Array(3)).map((_, i) => (
+          {categories.map((category) => (
             <Link
-              key={i}
-              to={`/category/${i + 1}`}
+              key={category.id}
+              to={`/category/${category.id}`}
               className="hover:text-primary transition-colors hidden sm:block"
             >
-              {['Eletrodomésticos', 'Itens Divertidos', 'Decoração'][i]}
+              {category.name}
             </Link>
           ))}
-          <Link to="/gallery" className="hover:text-primary transition-colors">
-            Galeria
-          </Link>
           {currentUser ? (
             <>
               <Link to="/admin">

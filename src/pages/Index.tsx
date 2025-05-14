@@ -29,18 +29,6 @@ const Index = () => {
             <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-[#fafaf5]">
               {siteSettings.description}
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link to="/category/1">
-                <Button size="lg" className="bg-primary hover:bg-primary/90">
-                  Ver Presentes
-                </Button>
-              </Link>
-              <Link to="/gallery">
-                <Button size="lg" variant="outline">
-                  Galeria de Fotos
-                </Button>
-              </Link>
-            </div>
           </div>
         </section>
         
