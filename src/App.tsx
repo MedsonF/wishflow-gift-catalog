@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { GiftProvider } from "@/contexts/GiftContext";
+import { useState, useEffect } from "react";
 
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -21,37 +22,55 @@ import ManageCategories from "./pages/admin/ManageCategories";
 import ManageGallery from "./pages/admin/ManageGallery";
 import SiteSettings from "./pages/admin/SiteSettings";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1
+    },
+  },
+});
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <GiftProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/category/:id" element={<CategoryPage />} />
-            <Route path="/gallery" element={<GalleryPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            
-            {/* Admin routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="items" element={<ManageItems />} />
-              <Route path="items/new" element={<NewItem />} />
-              <Route path="categories" element={<ManageCategories />} />
-              <Route path="gallery" element={<ManageGallery />} />
-              <Route path="settings" element={<SiteSettings />} />
-            </Route>
-            
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </GiftProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate initial data loading
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <GiftProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/category/:id" element={<CategoryPage />} />
+              <Route path="/gallery" element={<GalleryPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              
+              {/* Admin routes */}
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="items" element={<ManageItems />} />
+                <Route path="items/new" element={<NewItem />} />
+                <Route path="categories" element={<ManageCategories />} />
+                <Route path="gallery" element={<ManageGallery />} />
+                <Route path="settings" element={<SiteSettings />} />
+              </Route>
+              
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </GiftProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

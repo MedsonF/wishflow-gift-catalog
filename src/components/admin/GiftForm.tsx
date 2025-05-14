@@ -28,6 +28,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
     installmentPaymentLink: '',
   });
   const [hasInstallment, setHasInstallment] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Initialize form data if editing
   useEffect(() => {
@@ -70,24 +71,31 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
-    if (gift) {
-      // Update
-      updateGift(gift.id, {
-        ...formData,
-        installmentPaymentLink: hasInstallment ? formData.installmentPaymentLink : undefined,
-      });
-    } else {
-      // Create
-      addGift({
-        ...formData,
-        installmentPaymentLink: hasInstallment ? formData.installmentPaymentLink : undefined,
-      });
+    try {
+      if (gift) {
+        // Update
+        await updateGift(gift.id, {
+          ...formData,
+          installmentPaymentLink: hasInstallment ? formData.installmentPaymentLink : undefined,
+        });
+      } else {
+        // Create
+        await addGift({
+          ...formData,
+          installmentPaymentLink: hasInstallment ? formData.installmentPaymentLink : undefined,
+        });
+      }
+      
+      onSubmit();
+    } catch (error) {
+      console.error('Error saving gift:', error);
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    onSubmit();
   };
 
   const handleImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,15 +103,17 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        // Ensure we're working with a string for the image data
-        const base64String = reader.result as string;
-        // Save to localStorage
-        localStorage.setItem('savedImage', base64String);
-        // Update form data with the string representation
-        setFormData(prev => ({
-          ...prev,
-          imageUrl: base64String
-        }));
+        // Fix for TS error: Ensure we're working with a string
+        const result = reader.result;
+        if (typeof result === 'string') {
+          // Save to localStorage for backwards compatibility
+          localStorage.setItem('savedImage', result);
+          // Update form data with the string representation
+          setFormData(prev => ({
+            ...prev,
+            imageUrl: result
+          }));
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -250,11 +260,13 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
       </div>
       
       <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={onCancel}>
+        <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
           Cancelar
         </Button>
-        <Button type="submit">
-          {gift ? 'Atualizar Item' : 'Adicionar Item'}
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting 
+            ? (gift ? 'Atualizando...' : 'Adicionando...') 
+            : (gift ? 'Atualizar Item' : 'Adicionar Item')}
         </Button>
       </div>
     </form>
