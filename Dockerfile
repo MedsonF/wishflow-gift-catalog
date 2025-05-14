@@ -24,8 +24,8 @@ COPY --from=build /app/package-lock.json ./
 RUN npm install serve --omit=dev
 
 # Porta padrão do 'serve' (ajuste se necessário)
-ENV PORT=3000
+ENV PORT=8511
 
-EXPOSE 3000
+EXPOSE 8511
 
-CMD ["npx", "serve", "-s", "dist", "-l", "3000"]
+CMD ["npx", "serve", "-s", "dist", "-l", "8511"]
