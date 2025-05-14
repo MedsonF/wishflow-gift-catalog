@@ -5,7 +5,7 @@ import { useGiftContext } from '@/contexts/GiftContext';
 import { Button } from '@/components/ui/button';
 
 const Header: React.FC = () => {
-  const { siteSettings, currentUser, logout } = useGiftContext();
+  const { siteSettings, categories, currentUser, logout } = useGiftContext();
 
   return (
     <header className="bg-white shadow-md">
