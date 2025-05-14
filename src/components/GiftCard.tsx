@@ -55,9 +55,9 @@ const GiftCard: React.FC<GiftCardProps> = ({
           {formatPrice(gift.price)}
         </Badge>
       </div>
-      <CardContent className="pt-4 flex-grow">
-        <h3 className="font-bold text-lg mb-2 line-clamp-1">{gift.title}</h3>
-        <p className="text-gray-600 text-sm line-clamp-3">{gift.description}</p>
+      <CardContent className="pt-3 flex-grow space-y-1">
+        <h3 className="font-semibold text-base mb-1 line-clamp-1">{gift.title}</h3>
+        <p className="text-gray-600 text-xs line-clamp-3 leading-relaxed">{gift.description}</p>
       </CardContent>
       <CardFooter className="flex flex-col space-y-2">
         {admin ? (
