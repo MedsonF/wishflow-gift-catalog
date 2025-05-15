@@ -23,7 +23,7 @@ COPY vite.config.ts ./
 
 # Instalar todas as dependências
 RUN npm install
-RUN npm install mercadopago sonner @types/node vite @vitejs/plugin-react --save
+RUN npm install -D vite @vitejs/plugin-react @vitejs/plugin-react-swc @types/node mercadopago sonner
 
 # Copiar o resto dos arquivos
 COPY . .
@@ -41,6 +41,10 @@ RUN npm install -g serve
 
 # Copiar os arquivos de build
 COPY --from=builder /app/dist ./dist
+
+# Definir variáveis de ambiente para produção
+ENV NODE_ENV=production
+ENV PORT=8511
 
 EXPOSE 8511
 
