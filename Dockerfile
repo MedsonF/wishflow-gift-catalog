@@ -10,7 +10,7 @@ RUN apk add --no-cache python3 make g++
 COPY package*.json ./
 COPY bun.lockb ./
 COPY tsconfig*.json ./
-COPY .env.local ./
+COPY .env ./
 
 # Instalar todas as dependências, incluindo o Mercado Pago
 RUN npm install
@@ -32,7 +32,7 @@ COPY --from=build /app/.next ./.next
 COPY --from=build /app/public ./public
 COPY --from=build /app/package.json ./
 COPY --from=build /app/package-lock.json ./
-COPY --from=build /app/.env.local ./
+COPY --from=build /app/.env ./
 
 # Instalar apenas dependências de produção
 RUN npm install --production
