@@ -11,8 +11,8 @@ COPY bun.lockb ./
 
 # Instalar dependências incluindo pg e tipos
 RUN npm install
+RUN npm install tsx @types/node dotenv pg @types/pg --save
 RUN npm install -g tsx
-RUN npm install pg @types/pg @types/node dotenv --save
 
 COPY . .
 
@@ -45,8 +45,10 @@ COPY migrate.sh .
 # Tornar o script de migração executável
 RUN chmod +x migrate.sh
 
-# Instalar serve e tsx globalmente
-RUN npm install -g serve tsx
+# Instalar serve e tsx
+RUN npm install -g serve
+RUN npm install tsx --save
+RUN npm install -g tsx
 
 # Variáveis de ambiente para produção
 ENV PORT=8511 \
@@ -55,7 +57,8 @@ ENV PORT=8511 \
     POSTGRES_DB=lista \
     POSTGRES_PASSWORD=OvHsBEvEUzcHa6otaqHadimeOFDt3qfb \
     POSTGRES_PORT=5500 \
-    NODE_ENV=production
+    NODE_ENV=production \
+    PATH="/app/node_modules/.bin:${PATH}"
 
 EXPOSE 8511
 

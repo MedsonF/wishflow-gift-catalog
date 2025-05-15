@@ -8,7 +8,7 @@ done
 
 # Executar migração
 echo "Executando migração..."
-cd /app && node --loader tsx src/scripts/migrate-to-postgres.ts
+cd /app && npx tsx src/scripts/migrate-to-postgres.ts
 
 # Verificar se a migração foi bem-sucedida
 if [ $? -eq 0 ]; then
