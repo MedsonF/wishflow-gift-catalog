@@ -11,7 +11,8 @@ COPY bun.lockb ./
 
 # Instalar dependências incluindo pg e tipos
 RUN npm install
-RUN npm install pg @types/pg @types/node tsx dotenv --save
+RUN npm install -g tsx
+RUN npm install pg @types/pg @types/node dotenv --save
 
 COPY . .
 
@@ -20,7 +21,8 @@ ENV POSTGRES_USER=postgres \
     POSTGRES_HOST=panel.primeassessoria.shop \
     POSTGRES_DB=lista \
     POSTGRES_PASSWORD=OvHsBEvEUzcHa6otaqHadimeOFDt3qfb \
-    POSTGRES_PORT=5500
+    POSTGRES_PORT=5500 \
+    NODE_ENV=production
 
 RUN npm run build
 
@@ -37,13 +39,14 @@ COPY --from=build /app/dist ./dist
 COPY --from=build /app/package.json ./
 COPY --from=build /app/package-lock.json ./
 COPY --from=build /app/src ./src
+COPY --from=build /app/node_modules ./node_modules
 COPY migrate.sh .
 
 # Tornar o script de migração executável
 RUN chmod +x migrate.sh
 
-# Instalar serve e dependências necessárias para a migração
-RUN npm install serve pg tsx @types/pg @types/node dotenv --omit=dev
+# Instalar serve e tsx globalmente
+RUN npm install -g serve tsx
 
 # Variáveis de ambiente para produção
 ENV PORT=8511 \
@@ -51,7 +54,8 @@ ENV PORT=8511 \
     POSTGRES_HOST=panel.primeassessoria.shop \
     POSTGRES_DB=lista \
     POSTGRES_PASSWORD=OvHsBEvEUzcHa6otaqHadimeOFDt3qfb \
-    POSTGRES_PORT=5500
+    POSTGRES_PORT=5500 \
+    NODE_ENV=production
 
 EXPOSE 8511
 

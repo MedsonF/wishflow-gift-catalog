@@ -8,7 +8,7 @@ done
 
 # Executar migração
 echo "Executando migração..."
-NODE_OPTIONS='--loader tsx' tsx --tsconfig src/scripts/tsconfig.json src/scripts/migrate-to-postgres.ts
+cd /app && node --loader tsx src/scripts/migrate-to-postgres.ts
 
 # Verificar se a migração foi bem-sucedida
 if [ $? -eq 0 ]; then

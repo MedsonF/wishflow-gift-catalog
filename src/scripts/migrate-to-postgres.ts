@@ -1,10 +1,16 @@
 import 'dotenv/config';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { supabase } from '../integrations/supabase/client';
 import { createTables, migrateDataFromSupabase, testConnection } from '../integrations/postgres/client';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function fetchSupabaseData() {
   try {
     console.log('Conectando ao Supabase...');
+    console.log('Diretório atual:', __dirname);
     
     // Buscar todos os dados do Supabase
     const [
