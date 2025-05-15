@@ -3,10 +3,10 @@ import { Pool } from 'pg';
 // Configuração do PostgreSQL
 export const pool = new Pool({
   user: process.env.POSTGRES_USER || 'postgres',
-  host: process.env.POSTGRES_HOST || 'chat_quadrobd',
+  host: process.env.POSTGRES_HOST || 'panel.primeassessoria.shop',
   database: process.env.POSTGRES_DB || 'lista',
   password: process.env.POSTGRES_PASSWORD || 'OvHsBEvEUzcHa6otaqHadimeOFDt3qfb',
-  port: parseInt(process.env.POSTGRES_PORT || '5432'),
+  port: parseInt(process.env.POSTGRES_PORT || '5500'),
 });
 
 // Função para testar a conexão
