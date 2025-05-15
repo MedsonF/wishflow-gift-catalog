@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { GiftItem, Category, User, GalleryImage, SiteSettings } from '@/types';
 import { supabase } from "@/integrations/supabase/client";
@@ -147,13 +146,25 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (error) {
         if (error.code === 'PGRST116') {
-          // No settings found, we'll use the default ones
-          console.log('No site settings found, using defaults');
+          console.log('Nenhuma configuração encontrada, usando valores padrão');
+          // Inserir configurações padrão no banco
+          const { error: insertError } = await supabase
+            .from('site_settings')
+            .insert({
+              title: siteSettings.title,
+              description: siteSettings.description,
+              primary_color: siteSettings.primaryColor,
+              background_color: siteSettings.backgroundColor,
+            });
+          
+          if (insertError) {
+            console.error('Erro ao inserir configurações padrão:', insertError);
+          }
         } else {
-          throw error;
+          console.error('Erro ao buscar configurações:', error);
         }
       } else if (data) {
-        // Map database fields to our app's structure
+        console.log('Configurações carregadas com sucesso:', data);
         setSiteSettings({
           title: data.title,
           description: data.description,
@@ -162,7 +173,7 @@ export const GiftProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
       }
     } catch (error) {
-      console.error('Error fetching site settings:', error);
+      console.error('Erro ao buscar configurações do site:', error);
     } finally {
       setLoading(prev => ({ ...prev, siteSettings: false }));
     }

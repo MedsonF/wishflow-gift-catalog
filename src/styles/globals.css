@@ -1,0 +1,26 @@
+:root {
+  --primary-color: #fafaf5;
+  --background-color: #ffffff;
+}
+
+body {
+  background-color: var(--background-color);
+}
+
+/* Classe utilitária para usar a cor primária */
+.primary-color {
+  color: var(--primary-color);
+}
+
+.primary-bg {
+  background-color: var(--primary-color);
+}
+
+/* Classe utilitária para usar a cor de fundo */
+.background-color {
+  color: var(--background-color);
+}
+
+.background-bg {
+  background-color: var(--background-color);
+} 
