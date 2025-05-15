@@ -14,6 +14,7 @@ ARG NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_MERCADO_PAGO_ACCESS_TOKEN=$NEXT_PUBLIC_MERCADO_PAGO_ACCESS_TOKEN
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NODE_ENV=production
+ENV PATH /app/node_modules/.bin:$PATH
 
 # Copiar arquivos de configuração primeiro
 COPY package*.json ./
@@ -23,10 +24,15 @@ COPY vite.config.ts ./
 
 # Instalar todas as dependências
 RUN npm install
-RUN npm install -D vite @vitejs/plugin-react @vitejs/plugin-react-swc @types/node mercadopago sonner
+RUN npm install -g vite
+RUN npm install -D vite @vitejs/plugin-react @vitejs/plugin-react-swc @types/node mercadopago sonner terser
 
 # Copiar o resto dos arquivos
 COPY . .
+
+# Verificar se o Vite está instalado e seu caminho
+RUN which vite
+RUN vite --version
 
 # Construir a aplicação Vite
 RUN npm run build
