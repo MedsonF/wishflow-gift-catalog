@@ -22,9 +22,13 @@ const GiftGrid: React.FC<GiftGridProps> = ({
   // Using the mobile hook to determine if we're on a mobile device
   const isMobile = useIsMobile();
 
+  const sortedGifts = React.useMemo(() => {
+    return [...gifts].sort((a, b) => b.price - a.price);
+  }, [gifts]);
+
   return (
     <div className={`grid grid-cols-2 ${!isMobile ? 'sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4' : ''} gap-4 sm:gap-6`}>
-      {gifts.map((gift) => (
+      {sortedGifts.map((gift) => (
         <GiftCard
           key={gift.id}
           gift={gift}
