@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { GiftItem } from '@/types';
 import { useGiftContext } from '@/contexts/GiftContext';
@@ -7,8 +8,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { createPaymentLink } from '@/integrations/mercadopago/config';
-import { toast } from 'sonner';
 
 interface GiftFormProps {
   gift?: GiftItem;
@@ -72,52 +71,11 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
     }
   };
 
-  const generatePaymentLinks = async () => {
-    try {
-      // Gerar link de pagamento à vista (PIX)
-      const { init_point: cashLink } = await createPaymentLink({
-        title: formData.title,
-        price: formData.price,
-        description: formData.description,
-        installments: false
-      });
-
-      // Atualizar o link de pagamento à vista
-      setFormData(prev => ({
-        ...prev,
-        cashPaymentLink: cashLink
-      }));
-
-      // Se tiver parcelamento, gerar link de pagamento parcelado
-      if (hasInstallment) {
-        const { init_point: installmentLink } = await createPaymentLink({
-          title: formData.title,
-          price: formData.price,
-          description: formData.description,
-          installments: true
-        });
-
-        setFormData(prev => ({
-          ...prev,
-          installmentPaymentLink: installmentLink
-        }));
-      }
-
-      toast.success('Links de pagamento gerados com sucesso!');
-    } catch (error) {
-      console.error('Erro ao gerar links de pagamento:', error);
-      toast.error(error instanceof Error ? error.message : 'Erro ao gerar links de pagamento. Tente novamente.');
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     try {
-      // Gerar links de pagamento antes de salvar
-      await generatePaymentLinks();
-
       if (gift) {
         // Update
         await updateGift(gift.id, {
@@ -135,7 +93,6 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
       onSubmit();
     } catch (error) {
       console.error('Error saving gift:', error);
-      toast.error('Erro ao salvar o presente. Tente novamente.');
     } finally {
       setIsSubmitting(false);
     }
@@ -273,40 +230,41 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
           </div>
         </div>
         
-        <div className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="hasInstallment"
-              checked={hasInstallment}
-              onCheckedChange={handleInstallmentToggle}
-              disabled={isSubmitting}
-            />
-            <Label htmlFor="hasInstallment">Permitir Parcelamento</Label>
-          </div>
-
-          {/* Links de pagamento serão gerados automaticamente ao salvar */}
-          {formData.cashPaymentLink && (
-            <div className="space-y-2">
-              <Label>Link de Pagamento (PIX/À Vista)</Label>
-              <Input
-                value={formData.cashPaymentLink}
-                readOnly
-                disabled
-              />
-            </div>
-          )}
-
-          {hasInstallment && formData.installmentPaymentLink && (
-            <div className="space-y-2">
-              <Label>Link de Pagamento (Parcelado)</Label>
-              <Input
-                value={formData.installmentPaymentLink}
-                readOnly
-                disabled
-              />
-            </div>
-          )}
+        <div className="space-y-2">
+          <Label htmlFor="cashPaymentLink">Link para Pagamento à Vista</Label>
+          <Input
+            id="cashPaymentLink"
+            name="cashPaymentLink"
+            value={formData.cashPaymentLink}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            required
+          />
         </div>
+        
+        <div className="flex items-center space-x-2 mb-2">
+          <Switch
+            id="hasInstallment"
+            checked={hasInstallment}
+            onCheckedChange={handleInstallmentToggle}
+            disabled={isSubmitting}
+          />
+          <Label htmlFor="hasInstallment">Adicionar Pagamento Parcelado</Label>
+        </div>
+        
+        {hasInstallment && (
+          <div className="space-y-2">
+            <Label htmlFor="installmentPaymentLink">Link para Pagamento Parcelado</Label>
+            <Input
+              id="installmentPaymentLink"
+              name="installmentPaymentLink"
+              value={formData.installmentPaymentLink}
+              onChange={handleChange}
+              disabled={isSubmitting}
+              required={hasInstallment}
+            />
+          </div>
+        )}
       </div>
       
       <div className="flex justify-end space-x-2">
@@ -314,7 +272,9 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
           Cancelar
         </Button>
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Salvando...' : gift ? 'Atualizar' : 'Criar'}
+          {isSubmitting 
+            ? (gift ? 'Atualizando...' : 'Adicionando...') 
+            : (gift ? 'Atualizar Item' : 'Adicionar Item')}
         </Button>
       </div>
     </form>

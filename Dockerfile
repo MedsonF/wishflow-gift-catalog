@@ -1,58 +1,31 @@
 # Etapa 1: Build da aplicação
-FROM node:20-alpine AS builder
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
-# Instalar dependências necessárias para compilação
-RUN apk add --no-cache python3 make g++
-
-# Definir argumentos de build
-ARG NEXT_PUBLIC_MERCADO_PAGO_ACCESS_TOKEN
-ARG NEXT_PUBLIC_SITE_URL
-
-# Definir variáveis de ambiente para o build
-ENV NEXT_PUBLIC_MERCADO_PAGO_ACCESS_TOKEN=$NEXT_PUBLIC_MERCADO_PAGO_ACCESS_TOKEN
-ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
-ENV NODE_ENV=production
-ENV PATH /app/node_modules/.bin:$PATH
-
-# Copiar arquivos de configuração primeiro
 COPY package*.json ./
 COPY bun.lockb ./
-COPY tsconfig*.json ./
-COPY vite.config.ts ./
-
-# Instalar todas as dependências
-RUN npm install
-RUN npm install -g vite
-RUN npm install -D vite @vitejs/plugin-react @vitejs/plugin-react-swc @types/node mercadopago sonner terser
-
-# Copiar o resto dos arquivos
 COPY . .
 
-# Verificar se o Vite está instalado e seu caminho
-RUN which vite
-RUN vite --version
-
-# Construir a aplicação Vite
+RUN npm install
 RUN npm run build
 
-# Etapa 2: Servir a aplicação
+# Etapa 2: Imagem para produção, usando 'serve'
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Instalar serve para servir os arquivos estáticos
-RUN npm install -g serve
+# Só precisa do dist e do serve para rodar em produção
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/package.json ./
+COPY --from=build /app/package-lock.json ./
 
-# Copiar os arquivos de build
-COPY --from=builder /app/dist ./dist
+# Instala só o 'serve' (não instala dependências do projeto React)
+RUN npm install serve --omit=dev
 
-# Definir variáveis de ambiente para produção
-ENV NODE_ENV=production
+# Porta padrão do 'serve' (ajuste se necessário)
 ENV PORT=8511
 
 EXPOSE 8511
 
-# Iniciar o servidor
-CMD ["serve", "-s", "dist", "-l", "8511"]
+CMD ["npx", "serve", "-s", "dist", "-l", "8511"]
