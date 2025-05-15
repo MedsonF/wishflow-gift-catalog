@@ -11,16 +11,16 @@ COPY bun.lockb ./
 
 # Instalar dependências incluindo pg e tipos
 RUN npm install
-RUN npm install pg @types/pg @types/node tsx --save
+RUN npm install pg @types/pg @types/node tsx dotenv --save
 
 COPY . .
 
 # Variáveis de ambiente para conexão com o PostgreSQL
 ENV POSTGRES_USER=postgres \
-    POSTGRES_HOST=chat_quadrobd \
+    POSTGRES_HOST=panel.primeassessoria.shop \
     POSTGRES_DB=lista \
     POSTGRES_PASSWORD=OvHsBEvEUzcHa6otaqHadimeOFDt3qfb \
-    POSTGRES_PORT=5432
+    POSTGRES_PORT=5500
 
 RUN npm run build
 
@@ -36,22 +36,22 @@ RUN apk add --no-cache postgresql-client
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/package.json ./
 COPY --from=build /app/package-lock.json ./
-COPY --from=build /app/src/scripts/migrate-to-postgres.ts ./src/scripts/
+COPY --from=build /app/src ./src
 COPY migrate.sh .
 
 # Tornar o script de migração executável
 RUN chmod +x migrate.sh
 
-# Instalar serve e pg para produção
-RUN npm install serve pg tsx --omit=dev
+# Instalar serve e dependências necessárias para a migração
+RUN npm install serve pg tsx @types/pg @types/node dotenv --omit=dev
 
 # Variáveis de ambiente para produção
 ENV PORT=8511 \
     POSTGRES_USER=postgres \
-    POSTGRES_HOST=chat_quadrobd \
+    POSTGRES_HOST=panel.primeassessoria.shop \
     POSTGRES_DB=lista \
     POSTGRES_PASSWORD=OvHsBEvEUzcHa6otaqHadimeOFDt3qfb \
-    POSTGRES_PORT=5432
+    POSTGRES_PORT=5500
 
 EXPOSE 8511
 

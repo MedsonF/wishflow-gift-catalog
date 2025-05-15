@@ -1,5 +1,6 @@
-import { supabase } from '@/integrations/supabase/client';
-import { createTables, migrateDataFromSupabase, testConnection } from '@/integrations/postgres/client';
+import 'dotenv/config';
+import { supabase } from '../integrations/supabase/client';
+import { createTables, migrateDataFromSupabase, testConnection } from '../integrations/postgres/client';
 
 async function fetchSupabaseData() {
   try {
