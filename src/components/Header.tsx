@@ -40,11 +40,7 @@ const Header: React.FC = () => {
               </Button>
             </>
           ) : (
-            <Link to="/login">
-              <Button variant="outline" size="sm">
-                Admin
-              </Button>
-            </Link>
+            <></> 
           )}
         </nav>
       </div>
