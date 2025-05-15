@@ -11,15 +11,15 @@ COPY bun.lockb ./
 
 # Instalar dependências incluindo pg e tipos
 RUN npm install
-RUN npm install pg @types/pg @types/node --save
+RUN npm install pg @types/pg @types/node tsx --save
 
 COPY . .
 
 # Variáveis de ambiente para conexão com o PostgreSQL
 ENV POSTGRES_USER=postgres \
-    POSTGRES_HOST=postgres \
-    POSTGRES_DB=wishflow_gift_catalog \
-    POSTGRES_PASSWORD=postgres \
+    POSTGRES_HOST=chat_quadrobd \
+    POSTGRES_DB=lista \
+    POSTGRES_PASSWORD=OvHsBEvEUzcHa6otaqHadimeOFDt3qfb \
     POSTGRES_PORT=5432
 
 RUN npm run build
@@ -36,18 +36,24 @@ RUN apk add --no-cache postgresql-client
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/package.json ./
 COPY --from=build /app/package-lock.json ./
+COPY --from=build /app/src/scripts/migrate-to-postgres.ts ./src/scripts/
+COPY migrate.sh .
+
+# Tornar o script de migração executável
+RUN chmod +x migrate.sh
 
 # Instalar serve e pg para produção
-RUN npm install serve pg --omit=dev
+RUN npm install serve pg tsx --omit=dev
 
 # Variáveis de ambiente para produção
 ENV PORT=8511 \
     POSTGRES_USER=postgres \
-    POSTGRES_HOST=postgres \
-    POSTGRES_DB=wishflow_gift_catalog \
-    POSTGRES_PASSWORD=postgres \
+    POSTGRES_HOST=chat_quadrobd \
+    POSTGRES_DB=lista \
+    POSTGRES_PASSWORD=OvHsBEvEUzcHa6otaqHadimeOFDt3qfb \
     POSTGRES_PORT=5432
 
 EXPOSE 8511
 
-CMD ["npx", "serve", "-s", "dist", "-l", "8511"]
+# Executar migração e depois iniciar o servidor
+CMD ["sh", "-c", "./migrate.sh && npx serve -s dist -l 8511"]

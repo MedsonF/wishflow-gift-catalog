@@ -3,9 +3,9 @@ import { Pool } from 'pg';
 // Configuração do PostgreSQL
 export const pool = new Pool({
   user: process.env.POSTGRES_USER || 'postgres',
-  host: process.env.POSTGRES_HOST || 'localhost',
-  database: process.env.POSTGRES_DB || 'wishflow_gift_catalog',
-  password: process.env.POSTGRES_PASSWORD || 'postgres',
+  host: process.env.POSTGRES_HOST || 'chat_quadrobd',
+  database: process.env.POSTGRES_DB || 'lista',
+  password: process.env.POSTGRES_PASSWORD || 'OvHsBEvEUzcHa6otaqHadimeOFDt3qfb',
   port: parseInt(process.env.POSTGRES_PORT || '5432'),
 });
 
