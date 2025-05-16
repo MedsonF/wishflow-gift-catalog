@@ -52,15 +52,30 @@ const CategoryPage = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">{categoryName}</h1>
           <p className="text-gray-600">
-            {categories.find(cat => cat.id === id)?.name?.toLowerCase() === 'eletrodomésticos' ? (
-              <>
-                Para começar nossa vida juntos com o pé direito, montamos uma lista de presentes cheia de itens que vão deixar nosso novo lar ainda mais especial.
-                <br /><br />
-                Se quiser nos presentear, é só escolher um dos itens da lista, efetuar o pagamento ou comprar em sua loja de preferência e nos sinalizar qual foi o escolhido.
-              </>
-            ) : (
-              'Escolha um presente especial da nossa lista.'
-            )}
+            {(() => {
+              const categoryNameLower = categories.find(cat => cat.id === id)?.name?.toLowerCase();
+              if (categoryNameLower === 'eletrodomésticos') {
+                return (
+                  <>
+                    Para começar nossa vida juntos com o pé direito, montamos uma lista de presentes cheia de itens que vão deixar nosso novo lar ainda mais especial.
+                    <br /><br />
+                    Se quiser nos presentear, é só escolher um dos itens da lista, efetuar o pagamento ou comprar em sua loja de preferência e nos sinalizar qual foi o escolhido.
+                  </>
+                );
+              } else if (categoryNameLower === 'itens divertidos') {
+                return (
+                  <>
+                    Preparamos uma lista de presentes diferentes: aqui, cada
+                    item é uma ajudinha para nossa nova vida juntos e a tão
+                    sonhada Lua de Mel!
+                    <br /><br />
+                    Se quiser nos presentear, é só clicar e um dos itens da lista,
+                    efetuar o pagamento e nos sinalizar o presente escolhido.
+                  </>
+                );
+              }
+              return 'Escolha um presente especial da nossa lista.';
+            })()}
           </p>
         </div>
 
