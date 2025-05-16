@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGiftContext } from '@/contexts/GiftContext';
@@ -16,12 +15,12 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    setTimeout(() => {
-      const success = login(username, password);
+    try {
+      const success = await login(username, password);
       
       if (success) {
         toast({
@@ -36,9 +35,15 @@ const LoginPage = () => {
           variant: 'destructive',
         });
       }
-      
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        description: 'Ocorreu um erro ao tentar fazer login.',
+        variant: 'destructive',
+      });
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
