@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGiftContext } from '@/contexts/GiftContext';
@@ -53,7 +52,15 @@ const CategoryPage = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">{categoryName}</h1>
           <p className="text-gray-600">
-            Escolha um presente especial da nossa lista.
+            {categories.find(cat => cat.id === id)?.name?.toLowerCase() === 'eletrodomésticos' ? (
+              <>
+                Para começar nossa vida juntos com o pé direito, montamos uma lista de presentes cheia de itens que vão deixar nosso novo lar ainda mais especial.
+                <br /><br />
+                Se quiser nos presentear, é só escolher um dos itens da lista, efetuar o pagamento ou comprar em sua loja de preferência e nos sinalizar qual foi o escolhido.
+              </>
+            ) : (
+              'Escolha um presente especial da nossa lista.'
+            )}
           </p>
         </div>
 
