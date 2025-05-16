@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useGiftContext } from '@/contexts/GiftContext';
 import Header from '@/components/Header';
@@ -10,9 +9,10 @@ import { Link } from 'react-router-dom';
 const Index = () => {
   const { gifts, categories, siteSettings } = useGiftContext();
   
-  // Get featured gifts (4 available items)
+  // Get featured gifts (4 random available items)
   const featuredGifts = gifts
     .filter(gift => gift.status === 'available')
+    .sort(() => Math.random() - 0.5)
     .slice(0, 4);
 
   return (
