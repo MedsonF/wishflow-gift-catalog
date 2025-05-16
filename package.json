@@ -8,8 +8,7 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "migrate": "NODE_OPTIONS='--loader tsx' tsx --tsconfig src/scripts/tsconfig.json src/scripts/migrate-to-postgres.ts"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
