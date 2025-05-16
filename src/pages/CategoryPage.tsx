@@ -54,15 +54,7 @@ const CategoryPage = () => {
           <p className="text-gray-600">
             {(() => {
               const categoryNameLower = categories.find(cat => cat.id === id)?.name?.toLowerCase();
-              if (categoryNameLower === 'eletrodomésticos') {
-                return (
-                  <>
-                    Para começar nossa vida juntos com o pé direito, montamos uma lista de presentes cheia de itens que vão deixar nosso novo lar ainda mais especial.
-                    <br /><br />
-                    Se quiser nos presentear, é só escolher um dos itens da lista, efetuar o pagamento ou comprar em sua loja de preferência e nos sinalizar qual foi o escolhido.
-                  </>
-                );
-              } else if (categoryNameLower === 'itens divertidos') {
+              if (categoryNameLower === 'itens divertidos') {
                 return (
                   <>
                     Preparamos uma lista de presentes diferentes: aqui, cada
@@ -71,6 +63,14 @@ const CategoryPage = () => {
                     <br /><br />
                     Se quiser nos presentear, é só clicar e um dos itens da lista,
                     efetuar o pagamento e nos sinalizar o presente escolhido.
+                  </>
+                );
+              } else if (categoryNameLower === 'eletrodomésticos' || categoryNameLower === 'utensílios de cozinha' || categoryNameLower === 'cama, mesa e banho') {
+                return (
+                  <>
+                    Para começar nossa vida juntos com o pé direito, montamos uma lista de presentes cheia de itens que vão deixar nosso novo lar ainda mais especial.
+                    <br /><br />
+                    Se quiser nos presentear, é só escolher um dos itens da lista, efetuar o pagamento ou comprar em sua loja de preferência e nos sinalizar qual foi o escolhido.
                   </>
                 );
               }
