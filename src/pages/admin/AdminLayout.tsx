@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import AdminSidebar from '@/components/admin/AdminSidebar';
@@ -23,10 +22,10 @@ const AdminLayout = () => {
     <div className="min-h-screen flex flex-col">
       <AdminHeader />
       <div className="flex flex-1">
-        <div className="w-64 h-[calc(100vh-64px)] hidden md:block overflow-auto">
+        <div className="w-64 fixed top-[64px] bottom-0 hidden md:block">
           <AdminSidebar />
         </div>
-        <main className="flex-1 p-6 bg-gray-50 overflow-auto">
+        <main className="flex-1 p-6 bg-gray-50 overflow-auto md:ml-64">
           <Outlet />
         </main>
       </div>

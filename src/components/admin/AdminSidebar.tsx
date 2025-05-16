@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -26,7 +25,7 @@ const AdminSidebar: React.FC = () => {
         <h2 className="text-xl font-bold text-sidebar-foreground">Painel Admin</h2>
       </div>
       
-      <nav className="flex-1 p-4">
+      <nav className="flex-1 p-4 overflow-y-auto">
         <ul className="space-y-1">
           {links.map((link, index) => (
             <li key={index}>
