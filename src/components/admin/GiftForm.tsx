@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { GiftItem } from '@/types';
 import { useGiftContext } from '@/contexts/GiftContext';
@@ -23,11 +22,12 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
     price: 0,
     imageUrl: '',
     category: '',
-    status: 'available' as 'available' | 'chosen', // Type assertion to ensure type safety
+    status: 'available' as 'available' | 'chosen',
     cashPaymentLink: '',
     installmentPaymentLink: '',
   });
   const [hasInstallment, setHasInstallment] = useState(false);
+  const [hasPaymentLinks, setHasPaymentLinks] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Initialize form data if editing
@@ -44,6 +44,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
         installmentPaymentLink: gift.installmentPaymentLink || '',
       });
       setHasInstallment(!!gift.installmentPaymentLink);
+      setHasPaymentLinks(!!gift.cashPaymentLink || !!gift.installmentPaymentLink);
     }
   }, [gift]);
 
@@ -71,23 +72,33 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
     }
   };
 
+  const handlePaymentLinksToggle = (checked: boolean) => {
+    setHasPaymentLinks(checked);
+    if (!checked) {
+      setFormData({
+        ...formData,
+        cashPaymentLink: '',
+        installmentPaymentLink: '',
+      });
+      setHasInstallment(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     try {
+      const giftData = {
+        ...formData,
+        cashPaymentLink: hasPaymentLinks ? formData.cashPaymentLink : undefined,
+        installmentPaymentLink: hasPaymentLinks && hasInstallment ? formData.installmentPaymentLink : undefined,
+      };
+
       if (gift) {
-        // Update
-        await updateGift(gift.id, {
-          ...formData,
-          installmentPaymentLink: hasInstallment ? formData.installmentPaymentLink : undefined,
-        });
+        await updateGift(gift.id, giftData);
       } else {
-        // Create
-        await addGift({
-          ...formData,
-          installmentPaymentLink: hasInstallment ? formData.installmentPaymentLink : undefined,
-        });
+        await addGift(giftData);
       }
       
       onSubmit();
@@ -103,10 +114,8 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        // Fix: Ensure we're working with a string
         const result = reader.result;
         if (typeof result === 'string') {
-          // Update form data with the string representation
           setFormData({
             ...formData,
             imageUrl: result
@@ -120,36 +129,18 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">Título</Label>
-            <Input
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              required
-              disabled={isSubmitting}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="price">Preço (R$)</Label>
-            <Input
-              id="price"
-              name="price"
-              type="number"
-              step="0.01"
-              min="0"
-              value={formData.price}
-              onChange={handleChange}
-              required
-              disabled={isSubmitting}
-            />
-          </div>
+        <div>
+          <Label htmlFor="title">Título</Label>
+          <Input
+            id="title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            required
+          />
         </div>
-        
-        <div className="space-y-2">
+
+        <div>
           <Label htmlFor="description">Descrição</Label>
           <Textarea
             id="description"
@@ -157,124 +148,129 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
             value={formData.description}
             onChange={handleChange}
             required
-            rows={3}
-            disabled={isSubmitting}
           />
         </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="imageUrl">URL da Imagem</Label>
+
+        <div>
+          <Label htmlFor="price">Preço (R$)</Label>
           <Input
-            id="imageUrl"
-            name="imageUrl"
-            value={formData.imageUrl}
+            id="price"
+            name="price"
+            type="number"
+            step="0.01"
+            min="0"
+            value={formData.price}
             onChange={handleChange}
-            placeholder="Cole a URL da imagem ou selecione um arquivo abaixo"
-            disabled={isSubmitting}
-          />
-          <Input
-            id="imageFile"
-            name="imageFile"
-            type="file"
-            accept="image/*"
-            onChange={handleImageFile}
-            disabled={isSubmitting}
-          />
-          {formData.imageUrl && (
-            <img
-              src={formData.imageUrl}
-              alt="Prévia da imagem"
-              className="mt-2 max-h-32 rounded"
-            />
-          )}
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="category">Categoria</Label>
-            <Select 
-              value={formData.category} 
-              onValueChange={handleCategoryChange}
-              disabled={isSubmitting}
-              required
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione a categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map(category => (
-                  <SelectItem key={category.id} value={category.id}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="status">Status</Label>
-            <Select 
-              value={formData.status} 
-              onValueChange={handleStatusChange}
-              disabled={isSubmitting}
-              required
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione o status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="available">Disponível</SelectItem>
-                <SelectItem value="chosen">Escolhido</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="cashPaymentLink">Link para Pagamento à Vista</Label>
-          <Input
-            id="cashPaymentLink"
-            name="cashPaymentLink"
-            value={formData.cashPaymentLink}
-            onChange={handleChange}
-            disabled={isSubmitting}
             required
           />
         </div>
-        
-        <div className="flex items-center space-x-2 mb-2">
-          <Switch
-            id="hasInstallment"
-            checked={hasInstallment}
-            onCheckedChange={handleInstallmentToggle}
-            disabled={isSubmitting}
+
+        <div>
+          <Label htmlFor="image">Imagem</Label>
+          <Input
+            id="image"
+            type="file"
+            accept="image/*"
+            onChange={handleImageFile}
+            required={!gift}
           />
-          <Label htmlFor="hasInstallment">Adicionar Pagamento Parcelado</Label>
         </div>
-        
-        {hasInstallment && (
-          <div className="space-y-2">
-            <Label htmlFor="installmentPaymentLink">Link para Pagamento Parcelado</Label>
-            <Input
-              id="installmentPaymentLink"
-              name="installmentPaymentLink"
-              value={formData.installmentPaymentLink}
-              onChange={handleChange}
-              disabled={isSubmitting}
-              required={hasInstallment}
-            />
-          </div>
+
+        <div>
+          <Label htmlFor="category">Categoria</Label>
+          <Select
+            value={formData.category}
+            onValueChange={handleCategoryChange}
+            required
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione uma categoria" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <Label htmlFor="status">Status</Label>
+          <Select
+            value={formData.status}
+            onValueChange={handleStatusChange}
+            required
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="available">Disponível</SelectItem>
+              <SelectItem value="chosen">Escolhido</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="hasPaymentLinks"
+            checked={hasPaymentLinks}
+            onCheckedChange={handlePaymentLinksToggle}
+          />
+          <Label htmlFor="hasPaymentLinks">Adicionar links de pagamento</Label>
+        </div>
+
+        {hasPaymentLinks && (
+          <>
+            <div>
+              <Label htmlFor="cashPaymentLink">Link de pagamento à vista</Label>
+              <Input
+                id="cashPaymentLink"
+                name="cashPaymentLink"
+                value={formData.cashPaymentLink}
+                onChange={handleChange}
+                required={hasPaymentLinks}
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="hasInstallment"
+                checked={hasInstallment}
+                onCheckedChange={handleInstallmentToggle}
+              />
+              <Label htmlFor="hasInstallment">Adicionar link de pagamento parcelado</Label>
+            </div>
+
+            {hasInstallment && (
+              <div>
+                <Label htmlFor="installmentPaymentLink">Link de pagamento parcelado</Label>
+                <Input
+                  id="installmentPaymentLink"
+                  name="installmentPaymentLink"
+                  value={formData.installmentPaymentLink}
+                  onChange={handleChange}
+                  required={hasInstallment}
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
-      
-      <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
+
+      <div className="flex justify-end space-x-4">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onCancel}
+          disabled={isSubmitting}
+        >
           Cancelar
         </Button>
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting 
-            ? (gift ? 'Atualizando...' : 'Adicionando...') 
-            : (gift ? 'Atualizar Item' : 'Adicionar Item')}
+          {isSubmitting ? 'Salvando...' : gift ? 'Atualizar' : 'Adicionar'}
         </Button>
       </div>
     </form>
