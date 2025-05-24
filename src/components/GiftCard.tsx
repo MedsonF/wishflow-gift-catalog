@@ -95,7 +95,7 @@ const GiftCard: React.FC<GiftCardProps> = ({
               <>
                 <Button
                   variant="default"
-                  className="w-full"
+                  className="w-full whitespace-normal text-center h-auto py-2"
                   onClick={handleCashPayment}
                 >
                   Comprar à Vista
@@ -103,7 +103,7 @@ const GiftCard: React.FC<GiftCardProps> = ({
                 {gift.installmentPaymentLink && (
                   <Button
                     variant="outline"
-                    className="w-full"
+                    className="w-full whitespace-normal text-center h-auto py-2"
                     onClick={handleInstallmentPayment}
                   >
                     Comprar Parcelado
@@ -113,10 +113,10 @@ const GiftCard: React.FC<GiftCardProps> = ({
             ) : (
               <Button
                 variant="default"
-                className="w-full"
+                className="w-full whitespace-normal text-center h-auto py-2"
                 disabled
               >
-                Disponível em Loja Física
+                Disponível em<br className="sm:hidden" /> Loja Física
               </Button>
             )}
           </div>
