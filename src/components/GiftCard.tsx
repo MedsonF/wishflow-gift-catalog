@@ -113,7 +113,7 @@ const GiftCard: React.FC<GiftCardProps> = ({
             ) : (
               <Button
                 variant="default"
-                className="w-full whitespace-normal text-center h-auto py-2"
+                className="w-full whitespace-normal text-center h-auto py-2 break-words"
                 disabled
               >
                 Disponível em<br className="sm:hidden" /> Loja Física
