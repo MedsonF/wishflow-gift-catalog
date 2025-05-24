@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -40,6 +39,8 @@ const GiftCard: React.FC<GiftCardProps> = ({
     }).format(price);
   };
 
+  const hasPaymentLinks = gift.cashPaymentLink || gift.installmentPaymentLink;
+
   return (
     <Card className={cn(
       "overflow-hidden h-full flex flex-col transition-all hover:shadow-lg",
@@ -63,70 +64,62 @@ const GiftCard: React.FC<GiftCardProps> = ({
           {gift.description}
         </p>
       </CardContent>
-      <CardFooter className="flex flex-col space-y-2">
+      <CardFooter className="pt-2">
         {admin ? (
-          <div className="flex flex-wrap gap-2 w-full">
-            <Button 
-              variant="outline" 
+          <div className="flex justify-end space-x-2 w-full">
+            <Button
+              variant="outline"
               size="sm"
-              className="flex-1"
-              onClick={() => onEdit && onEdit(gift.id)}
+              onClick={() => onEdit?.(gift.id)}
             >
               Editar
             </Button>
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="outline"
               size="sm"
-              className="flex-1"
-              onClick={() => onDelete && onDelete(gift.id)}
+              onClick={() => onDelete?.(gift.id)}
             >
               Excluir
             </Button>
-            {gift.status === 'available' ? (
-              <Button 
-                variant="secondary" 
-                size="sm"
-                className="w-full mt-2"
-                onClick={() => onMarkChosen && onMarkChosen(gift.id)}
-              >
-                Marcar como Escolhido
-              </Button>
-            ) : (
-              <Button 
-                variant="secondary" 
-                size="sm"
-                className="w-full mt-2"
-                onClick={() => onMarkChosen && onMarkChosen(gift.id)}
-              >
-                Marcar como Disponível
-              </Button>
-            )}
-          </div>
-        ) : gift.status === 'available' ? (
-          <div className="flex flex-wrap gap-2 w-full">
-            <Button 
-              variant="default" 
+            <Button
+              variant={gift.status === 'chosen' ? 'default' : 'outline'}
               size="sm"
-              className="flex-1"
-              onClick={handleCashPayment}
+              onClick={() => onMarkChosen?.(gift.id)}
             >
-              Pagar à Vista
+              {gift.status === 'chosen' ? 'Escolhido' : 'Disponível'}
             </Button>
-            {gift.installmentPaymentLink && (
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="flex-1"
-                onClick={handleInstallmentPayment}
+          </div>
+        ) : gift.status === 'available' && (
+          <div className="flex flex-col space-y-2 w-full">
+            {hasPaymentLinks ? (
+              <>
+                <Button
+                  variant="default"
+                  className="w-full"
+                  onClick={handleCashPayment}
+                >
+                  Comprar à Vista
+                </Button>
+                {gift.installmentPaymentLink && (
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={handleInstallmentPayment}
+                  >
+                    Comprar Parcelado
+                  </Button>
+                )}
+              </>
+            ) : (
+              <Button
+                variant="default"
+                className="w-full"
+                disabled
               >
-                Parcelado
+                Disponível em Loja Física
               </Button>
             )}
           </div>
-        ) : (
-          <Badge variant="outline" className="w-full text-center py-1">
-            Já escolhido
-          </Badge>
         )}
       </CardFooter>
     </Card>
