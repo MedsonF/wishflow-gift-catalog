@@ -21,10 +21,20 @@
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": false,
 
+    /* Type Definitions */
+    "types": ["react", "node"],
+
+    /* Paths */
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+
+    /* Additional Settings */
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true
   },
   "include": ["src"]
 }

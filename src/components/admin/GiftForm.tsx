@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import ImageEditor from './ImageEditor';
 
 interface GiftFormProps {
   gift?: GiftItem;
@@ -84,6 +85,10 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
     }
   };
 
+  const handleImageChange = (newImageUrl: string) => {
+    setFormData({ ...formData, imageUrl: newImageUrl });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -106,23 +111,6 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
       console.error('Error saving gift:', error);
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const handleImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result;
-        if (typeof result === 'string') {
-          setFormData({
-            ...formData,
-            imageUrl: result
-          });
-        }
-      };
-      reader.readAsDataURL(file);
     }
   };
 
@@ -166,13 +154,10 @@ const GiftForm: React.FC<GiftFormProps> = ({ gift, onSubmit, onCancel }) => {
         </div>
 
         <div>
-          <Label htmlFor="image">Imagem</Label>
-          <Input
-            id="image"
-            type="file"
-            accept="image/*"
-            onChange={handleImageFile}
-            required={!gift}
+          <Label>Imagem</Label>
+          <ImageEditor
+            imageUrl={formData.imageUrl}
+            onImageChange={handleImageChange}
           />
         </div>
 

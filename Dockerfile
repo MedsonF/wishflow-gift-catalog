@@ -7,7 +7,9 @@ COPY package*.json ./
 COPY bun.lockb ./
 COPY . .
 
+# Instala todas as dependências, incluindo as de desenvolvimento
 RUN npm install
+RUN npm install @types/react lucide-react --save
 RUN npm run build
 
 # Etapa 2: Imagem para produção, usando 'serve'
@@ -20,8 +22,8 @@ COPY --from=build /app/dist ./dist
 COPY --from=build /app/package.json ./
 COPY --from=build /app/package-lock.json ./
 
-# Instala só o 'serve' (não instala dependências do projeto React)
-RUN npm install serve --omit=dev
+# Instala só o 'serve' e as dependências necessárias para produção
+RUN npm install serve @types/react lucide-react --omit=dev
 
 # Porta padrão do 'serve' (ajuste se necessário)
 ENV PORT=8511
