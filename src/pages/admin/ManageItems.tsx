@@ -188,6 +188,23 @@ const ManageItems = () => {
         </Select>
       </div>
       
+      {/* Category Filter Select */}
+      <div className="flex flex-col md:flex-row gap-4">
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger className="md:w-1/4">
+            <SelectValue placeholder="Filtrar por categoria" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todas as categorias</SelectItem>
+            {categories.map(category => (
+              <SelectItem key={category.id} value={category.id}>
+                {category.name} ({giftsByCategory[category.id]?.length || 0})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col">
         <TabsList className="w-full grid grid-cols-2 sm:flex sm:flex-row justify-start gap-2 sm:gap-0 sm:space-x-2">
