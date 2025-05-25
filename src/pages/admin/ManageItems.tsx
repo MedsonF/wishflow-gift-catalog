@@ -190,10 +190,16 @@ const ManageItems = () => {
       
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col">
-        <TabsList className="w-full grid grid-cols-2 sm:flex sm:flex-row justify-start gap-2 sm:gap-0 sm:space-x-2">
-          <TabsTrigger value="all" className="w-full">Todos</TabsTrigger>
+        <TabsList className="w-full grid grid-cols-2 sm:flex sm:flex-row justify-start gap-2 sm:gap-0 sm:space-x-2 p-1">
+          <TabsTrigger value="all" className="w-full data-[state=active]:bg-white data-[state=active]:text-primary">
+            Todos
+          </TabsTrigger>
           {categories.map(category => (
-            <TabsTrigger key={category.id} value={category.id} className="w-full">
+            <TabsTrigger
+              key={category.id}
+              value={category.id}
+              className="w-full data-[state=active]:bg-white data-[state=active]:text-primary"
+            >
               {category.name} ({giftsByCategory[category.id]?.length || 0})
             </TabsTrigger>
           ))}
