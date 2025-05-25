@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { useGiftContext } from '@/contexts/GiftContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import GiftGrid from '@/components/GiftGrid';
 import GiftForm from '@/components/admin/GiftForm';
 import { Link } from 'react-router-dom';
@@ -23,11 +23,12 @@ const ManageItems = () => {
   const [giftToDelete, setGiftToDelete] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState('all');
 
   // Refresh data when component mounts
   useEffect(() => {
     const loadData = async () => {
-      if (loading.gifts || loading.categories) return; // Avoid multiple refreshes
+      if (loading.gifts || loading.categories) return;
       
       setIsRefreshing(true);
       try {
@@ -45,7 +46,7 @@ const ManageItems = () => {
     };
     
     loadData();
-  }, []); // Only run once on mount
+  }, []);
 
   // Filter gifts
   const filteredGifts = gifts.filter(gift => {
@@ -53,9 +54,17 @@ const ManageItems = () => {
                           gift.description.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = categoryFilter === 'all' ? true : gift.category === categoryFilter;
     const matchesStatus = statusFilter === 'all' ? true : gift.status === statusFilter;
+    const matchesTab = activeTab === 'all' ? true : gift.category === activeTab;
     
-    return matchesSearch && matchesCategory && matchesStatus;
+    return matchesSearch && matchesCategory && matchesStatus && matchesTab;
   });
+
+  // Group gifts by category for tabs
+  const giftsByCategory = categories.reduce((acc, category) => {
+    const categoryGifts = gifts.filter(gift => gift.category === category.id);
+    acc[category.id] = categoryGifts;
+    return acc;
+  }, {} as Record<string, typeof gifts>);
 
   const handleEdit = (id: string) => {
     setCurrentGift(id);
@@ -118,9 +127,7 @@ const ManageItems = () => {
 
   const handleFormSubmit = async () => {
     try {
-      // Refresh data and wait for it to complete
       await refreshData();
-      
       setIsFormOpen(false);
       setCurrentGift(null);
       
@@ -140,7 +147,6 @@ const ManageItems = () => {
 
   const currentGiftData = currentGift ? gifts.find(g => g.id === currentGift) : undefined;
 
-  // Handle initial loading state - show loading spinner when first loading data
   if ((loading.gifts || loading.categories) && !isRefreshing) {
     return (
       <div className="h-96 flex items-center justify-center">
@@ -170,20 +176,6 @@ const ManageItems = () => {
           className="md:w-1/3"
         />
         
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="md:w-1/4">
-            <SelectValue placeholder="Filtrar por categoria" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas as categorias</SelectItem>
-            {categories.map(category => (
-              <SelectItem key={category.id} value={category.id}>
-                {category.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="md:w-1/4">
             <SelectValue placeholder="Filtrar por status" />
@@ -195,34 +187,64 @@ const ManageItems = () => {
           </SelectContent>
         </Select>
       </div>
-      
-      {/* Loading overlay when refreshing data */}
-      {isRefreshing && (
-        <div className="flex justify-center py-4">
-          <Loader2 className="h-6 w-6 animate-spin text-primary" />
-        </div>
-      )}
-      
-      {/* Results */}
-      {filteredGifts.length === 0 && !isRefreshing ? (
-        <div className="text-center py-8">
-          <h3 className="text-lg font-semibold mb-2">Nenhum item encontrado</h3>
-          <p className="text-gray-600">
-            Tente ajustar os filtros ou adicione um novo item.
-          </p>
-          <Link to="/admin/items/new" className="mt-4 inline-block">
-            <Button>Adicionar Presente</Button>
-          </Link>
-        </div>
-      ) : (
-        <GiftGrid 
-          gifts={filteredGifts} 
-          admin={true}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onMarkChosen={handleMarkChosen}
-        />
-      )}
+
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="w-full justify-start overflow-x-auto">
+          <TabsTrigger value="all">Todos</TabsTrigger>
+          {categories.map(category => (
+            <TabsTrigger key={category.id} value={category.id}>
+              {category.name} ({giftsByCategory[category.id]?.length || 0})
+            </TabsTrigger>
+          ))}
+        </TabsList>
+
+        <TabsContent value="all" className="mt-4">
+          {filteredGifts.length === 0 ? (
+            <div className="text-center py-8">
+              <h3 className="text-lg font-semibold mb-2">Nenhum item encontrado</h3>
+              <p className="text-gray-600">
+                Tente ajustar os filtros ou adicione um novo item.
+              </p>
+              <Link to="/admin/items/new" className="mt-4 inline-block">
+                <Button>Adicionar Presente</Button>
+              </Link>
+            </div>
+          ) : (
+            <GiftGrid 
+              gifts={filteredGifts} 
+              admin={true}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onMarkChosen={handleMarkChosen}
+            />
+          )}
+        </TabsContent>
+
+        {categories.map(category => (
+          <TabsContent key={category.id} value={category.id} className="mt-4">
+            {filteredGifts.length === 0 ? (
+              <div className="text-center py-8">
+                <h3 className="text-lg font-semibold mb-2">Nenhum item encontrado</h3>
+                <p className="text-gray-600">
+                  Não há itens nesta categoria ou os filtros aplicados não retornaram resultados.
+                </p>
+                <Link to="/admin/items/new" className="mt-4 inline-block">
+                  <Button>Adicionar Presente</Button>
+                </Link>
+              </div>
+            ) : (
+              <GiftGrid 
+                gifts={filteredGifts} 
+                admin={true}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onMarkChosen={handleMarkChosen}
+              />
+            )}
+          </TabsContent>
+        ))}
+      </Tabs>
       
       {/* Edit Dialog */}
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
@@ -248,16 +270,16 @@ const ManageItems = () => {
             <DialogTitle>Confirmar Exclusão</DialogTitle>
           </DialogHeader>
           <p>Tem certeza de que deseja excluir este item? Esta ação não pode ser desfeita.</p>
-          <div className="flex justify-end gap-2 mt-4">
-            <Button 
-              variant="outline" 
+          <div className="flex justify-end space-x-4 mt-4">
+            <Button
+              variant="outline"
               onClick={() => setIsDeleteDialogOpen(false)}
               disabled={isProcessing}
             >
               Cancelar
             </Button>
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="destructive"
               onClick={confirmDelete}
               disabled={isProcessing}
             >
