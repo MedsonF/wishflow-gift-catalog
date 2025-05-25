@@ -66,7 +66,7 @@ const GiftCard: React.FC<GiftCardProps> = ({
       </CardContent>
       <CardFooter className="pt-2">
         {admin ? (
-          <div className="flex justify-end space-x-2 w-full">
+          <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2 w-full">
             <Button
               variant="outline"
               size="sm"
