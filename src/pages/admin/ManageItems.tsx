@@ -187,7 +187,7 @@ const ManageItems = () => {
           </SelectContent>
         </Select>
       </div>
-
+      
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="w-full justify-start overflow-x-auto">
@@ -201,24 +201,24 @@ const ManageItems = () => {
 
         <TabsContent value="all" className="mt-4">
           {filteredGifts.length === 0 ? (
-            <div className="text-center py-8">
-              <h3 className="text-lg font-semibold mb-2">Nenhum item encontrado</h3>
-              <p className="text-gray-600">
-                Tente ajustar os filtros ou adicione um novo item.
-              </p>
-              <Link to="/admin/items/new" className="mt-4 inline-block">
-                <Button>Adicionar Presente</Button>
-              </Link>
-            </div>
-          ) : (
-            <GiftGrid 
-              gifts={filteredGifts} 
-              admin={true}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onMarkChosen={handleMarkChosen}
-            />
-          )}
+        <div className="text-center py-8">
+          <h3 className="text-lg font-semibold mb-2">Nenhum item encontrado</h3>
+          <p className="text-gray-600">
+            Tente ajustar os filtros ou adicione um novo item.
+          </p>
+          <Link to="/admin/items/new" className="mt-4 inline-block">
+            <Button>Adicionar Presente</Button>
+          </Link>
+        </div>
+      ) : (
+        <GiftGrid 
+          gifts={filteredGifts} 
+          admin={true}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onMarkChosen={handleMarkChosen}
+        />
+      )}
         </TabsContent>
 
         {categories.map(category => (
@@ -271,15 +271,15 @@ const ManageItems = () => {
           </DialogHeader>
           <p>Tem certeza de que deseja excluir este item? Esta ação não pode ser desfeita.</p>
           <div className="flex justify-end space-x-4 mt-4">
-            <Button
-              variant="outline"
+            <Button 
+              variant="outline" 
               onClick={() => setIsDeleteDialogOpen(false)}
               disabled={isProcessing}
             >
               Cancelar
             </Button>
-            <Button
-              variant="destructive"
+            <Button 
+              variant="destructive" 
               onClick={confirmDelete}
               disabled={isProcessing}
             >
