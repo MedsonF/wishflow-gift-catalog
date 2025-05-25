@@ -190,22 +190,16 @@ const ManageItems = () => {
       
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col">
-        <TabsList className="w-full grid grid-cols-2 sm:flex sm:flex-row justify-start gap-2 sm:gap-0 sm:space-x-2 p-1">
-          <TabsTrigger value="all" className="w-full data-[state=active]:bg-white data-[state=active]:text-primary">
-            Todos
-          </TabsTrigger>
+        <TabsList className="w-full grid grid-cols-2 sm:flex sm:flex-row justify-start gap-2 sm:gap-0 sm:space-x-2">
+          <TabsTrigger value="all" className="w-full">Todos</TabsTrigger>
           {categories.map(category => (
-            <TabsTrigger
-              key={category.id}
-              value={category.id}
-              className="w-full data-[state=active]:bg-white data-[state=active]:text-primary"
-            >
+            <TabsTrigger key={category.id} value={category.id} className="w-full">
               {category.name} ({giftsByCategory[category.id]?.length || 0})
             </TabsTrigger>
           ))}
         </TabsList>
 
-        <TabsContent value="all" className="mt-4 w-full block sm:flex-col pt-20">
+        <TabsContent value="all" className="mt-4 w-full">
           {filteredGifts.length === 0 ? (
         <div className="text-center py-8">
           <h3 className="text-lg font-semibold mb-2">Nenhum item encontrado</h3>
