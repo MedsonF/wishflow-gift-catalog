@@ -199,7 +199,7 @@ const ManageItems = () => {
           ))}
         </TabsList>
 
-        <TabsContent value="all" className="mt-4 w-full block sm:flex-col">
+        <TabsContent value="all" className="mt-4 w-full block sm:flex-col pt-8">
           {filteredGifts.length === 0 ? (
         <div className="text-center py-8">
           <h3 className="text-lg font-semibold mb-2">Nenhum item encontrado</h3>
