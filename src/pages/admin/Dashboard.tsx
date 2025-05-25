@@ -75,11 +75,8 @@ const Dashboard = () => {
         <Link to="/admin/items/new">
           <Button>Adicionar Presente</Button>
         </Link>
-        <Link to="/admin/gallery">
-          <Button variant="outline">Gerenciar Galeria</Button>
-        </Link>
-        <Link to="/admin/settings">
-          <Button variant="outline">Configurações</Button>
+        <Link to="/admin/items">
+          <Button variant="outline">Gerenciar Presentes</Button>
         </Link>
       </div>
       

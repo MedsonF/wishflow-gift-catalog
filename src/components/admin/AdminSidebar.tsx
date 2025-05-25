@@ -15,7 +15,6 @@ const AdminSidebar: React.FC = () => {
     { to: '/admin', label: 'Dashboard', exact: true },
     { to: '/admin/items', label: 'Gerenciar Itens' },
     { to: '/admin/categories', label: 'Categorias' },
-    { to: '/admin/gallery', label: 'Galeria' },
     { to: '/admin/settings', label: 'Configurações' },
   ];
 
