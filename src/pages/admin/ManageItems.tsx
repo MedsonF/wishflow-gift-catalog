@@ -205,16 +205,8 @@ const ManageItems = () => {
         </Select>
       </div>
       
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col">
-        <TabsList className="w-full grid grid-cols-2 sm:flex sm:flex-row justify-start gap-2 sm:gap-0 sm:space-x-2">
-          <TabsTrigger value="all" className="w-full">Todos</TabsTrigger>
-          {categories.map(category => (
-            <TabsTrigger key={category.id} value={category.id} className="w-full">
-              {category.name} ({giftsByCategory[category.id]?.length || 0})
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      {/* Tabs Content (still needed for displaying filtered gifts) */}
+      {/* The Tabs component itself is removed, only TabsContent is used below */}
 
         <TabsContent value="all" className="mt-4 w-full">
           {filteredGifts.length === 0 ? (
@@ -261,7 +253,6 @@ const ManageItems = () => {
             )}
           </TabsContent>
         ))}
-      </Tabs>
       
       {/* Edit Dialog */}
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
