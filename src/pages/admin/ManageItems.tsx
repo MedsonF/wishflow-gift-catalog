@@ -205,8 +205,8 @@ const ManageItems = () => {
         </Select>
       </div>
       
-      {/* Tabs Content (still needed for displaying filtered gifts) */}
-      {/* The Tabs component itself is removed, only TabsContent is used below */}
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col">
 
         <TabsContent value="all" className="mt-4 w-full">
           {filteredGifts.length === 0 ? (
@@ -253,6 +253,7 @@ const ManageItems = () => {
             )}
           </TabsContent>
         ))}
+      </Tabs>
       
       {/* Edit Dialog */}
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
